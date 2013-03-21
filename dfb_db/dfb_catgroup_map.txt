@@ -1,0 +1,10 @@
+CREATE TABLE dfb_catgroup_map (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  cat_id int(11) NOT NULL,
+  group_id int(11) NOT NULL,
+  PRIMARY KEY (id),
+  KEY cat_id (cat_id),
+  KEY cgroup_id (group_id),
+  CONSTRAINT cat_id FOREIGN KEY (cat_id) REFERENCES dfb_merchant_cat (id) ON DELETE CASCADE,
+  CONSTRAINT cgroup_id FOREIGN KEY (group_id) REFERENCES dfb_merchant_group (id) ON DELETE CASCADE
+)

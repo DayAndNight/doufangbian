@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+	<script language="Javascript">
+	function request_focus(){
+		document.getElementById("input_name").focus();
+	}
+	function delete_cat(cat_id)
+	{
+		if(confirm("确定删除该商家分类吗?")){
+		  return document.merchant_cat_form.action="__URL__/deleteCat/id/"+cat_id;
+		}else{
+			return false;
+		}
+	}
+</script>
+</head>
+<body onload="request_focus()">
+	<include file="merchant_head" />
+	<form method="post" action="{:U('addCat')}">
+		<label for="name">大组名称:</label>
+		<input type="text" id="input_name" name="name" style="min-width:180px;" required/>
+		<input type="submit" value="添加"/>
+	</form>
+	<form name="merchant_cat_form">
+		<table cellspacing="0" style="width:400px;">
+			<thead  style="background:#C0C0C0;">
+				<tr>
+					<th width="50" align="center">ID</th>
+					<th width="180" align="center">名称</th>
+					<th width="100" align="center">管理</th>
+				</tr>
+			</thead>
+			<tbody>
+				<volist name="merchantCats" id="vo">
+					<tr>
+						<td align="center">{$vo['id']}</td>
+						<td align="center"><a href="{:U('cat_details')}/catid/{$vo['id']}" target="main">{$vo['name']}</a></td>
+						<td align="center">
+							<input type="submit" value="删除" onclick="delete_cat({$vo['id']})"/>
+						</td>
+					</tr>
+				</volist>
+			</tbody>
+		</table>
+	</form>
+</body>
+</html>

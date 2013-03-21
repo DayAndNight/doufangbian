@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<!-- 管理大组中的小组 -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+	<script type="text/javascript">
+	function selectAll(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		for (i = 0; i < checkboxs.length; i++){
+			checkboxs[i].checked = true;
+		}
+	}
+	function notselectAll(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		for (i = 0; i < checkboxs.length; i++){
+			checkboxs[i].checked = false;
+		}
+	}
+	function checkSelect(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		var count=0;
+		for (i = 0; i < checkboxs.length; i++){
+			if(checkboxs[i].checked){
+				count++;
+			}
+		}
+		return count;
+	}
+	function deleteMerchantComms(){
+		var count=checkSelect("select_comments[]");
+		if(count>0){
+			if(confirm("确定删除选中的评论吗?")){
+				document.comments_form.action="__URL__/deleteMerchantComms";}
+			else{
+				return false;
+			}
+		}else{
+			window.alert("请先选择要删除的评论!!!");
+		}
+	}
+	</script>
+</head>
+<body>
+	<include file="merchant_head" />
+	<span>
+		商家详情> <b>{$merchant.name}</b>
+	</span>
+	<br/>
+	<br/>
+	<div style="max-width:600px;">
+		<span> <b>主营:</b>
+			{$merchant.major}
+		</span>
+		<br/>
+		<br/>
+		<span>
+			<b>电话:</b>
+			{$merchant.phone}
+		</span>
+		<br/>
+		<br/>
+		<span>
+			<b>网址:</b> <i><a href="{$merchant.website}" target="_blank">{$merchant.website}</a></i> 
+		</span>
+		<br/>
+		<br/>
+		<span>
+			<b>地址:</b>
+			{$merchant.address}
+			<a href="http://map.baidu.com/?newmap=1&ie=utf-8&s=s%26wd%3D{$merchant.address}" target="_blank">(地图)</a>
+		</span>
+		<br/>
+		<br/>
+		<b>最新资讯:</b>
+		{$merchant.news}
+		<br/>
+		<br/>
+		<span>
+			<b>简介:</b>
+			{$merchant.introduction}
+		</span>
+		<br/>
+		<br/>
+	</div>
+	<form name="comments_form" method="post">
+		<span>
+			<a href="">用户评论</a>
+		</span>
+		<table name="tbl_comments" width="600px" style="background:#E0EEEE;border:1px solid black">
+			<volist name="comments" id="vo">
+				<tr>
+					<td align="center" width="50px">{$vo['user_id']}</td>
+
+					<td>
+						<label>{$vo.time}</label>
+						<br/>
+						{$vo.content}
+					</td>
+					<td align="center" width="50px">
+						<input type="checkbox"  value="{$vo['id']}" name="select_comments[]"/>
+					</td>
+				</tr>
+			</volist>
+		</table>
+		<span>
+			<input type="button" id="selectBtn" value="全选"  onclick="selectAll('select_comments[]')"/>
+			<input type="button" value="取消"  onclick="notselectAll('select_comments[]')"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="hidden" value="{$merchant.id}" name="merchantid"/>
+			<input type="submit" value="删除" onclick="deleteMerchantComms()"/>
+		</span>
+	</form>
+</body>
+</html>

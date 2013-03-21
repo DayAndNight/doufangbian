@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+	<script language="Javascript">
+	function delete_merchant(merchant_id)
+	{
+		if(confirm("确定删除该记录吗?")){
+		  return document.merchant_form.action="__URL__/deleteMerchant/id/"+merchant_id;
+		}else{
+			return false;
+		}
+	}
+	function edit_merchant(merchant_id)
+	{
+		return document.merchant_form.action="__URL__/edit_merchant/id/"+merchant_id;
+	}
+	/*function display(id){
+        var traget=document.getElementById(id);
+         if(traget.style.display=="none"){
+         	traget.style.display="";
+         }else{
+         	traget.style.display="none";
+         }
+    }*/
+</script>
+</head>
+<body>
+	<include file="merchant_head" />
+	<form action="{:U('index')}" method="post">
+		<span>
+			<select name="search_group">
+				<option value="-1">所有分类</option>
+				<volist name="merchantGroups" id="pType">
+					<option value="{$pType['id']}">{$pType['name']}</option>
+				</volist>
+			</select>
+		</span>
+		<span>
+			<label for="search_keyword">关键字</label>
+			<input type="text" name="search_keyword"/>
+		</span>
+		<input type="submit" value="搜索"  name="dosearch"/>
+	</form>
+	<form name="merchant_form">
+		<empty  name="allMerchants">
+			<h3>暂时没有商家！</h3>
+			<else/>
+			<table cellspacing="0" style="font-size: 16px;width:800px;">
+				<thead style="background:#C0C0C0;">
+					<tr>
+						<th width="50" align="center">ID</th>
+						<th align="center">名称</th>
+						<th align="center">主营</th>
+						<th  align="center">顶</th>
+						<th  align="center">用户可见</th>
+						<th align="center">管理</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="allMerchants" id="vo">
+						<tr  class="tr_merchant_info">
+							<td align="center">{$vo['id']}</td>
+							<td align="center">
+								<a href="{:U(merchant_details)}/merchantid/{$vo['id']}" target="main">{$vo['name']}</a>
+								<if condition="($vo['isrecommend'] eq 1)">
+									<img src="__PUBLIC__/admin/images/recommend.gif" title="推荐商家"/>
+									<else/>
+								</if>
+							</td>
+							<td align="center">{$vo.major}</td>
+							<td align="center">{$vo['up']}</td>
+							<td align="center">
+								<if condition="$vo.status eq 1">
+									是
+									<else/>
+									否
+								</if>
+							</td>
+							<td align="center">
+								<input  type="submit" value="编辑"  onclick="edit_merchant({$vo['id']})" />
+								<input  type="submit" value="删除" onClick="delete_merchant({$vo['id']})"/>
+							</td>
+						</tr>
+						
+					</volist>
+				</tbody>
+			</table>
+		</empty>
+	</form>
+</body>
+</html>

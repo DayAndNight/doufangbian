@@ -1,0 +1,17 @@
+CREATE TABLE dfb_dou_user (
+  id int(11) NOT NULL auto_increment,
+  photo varchar(200) default NULL,
+  username varchar(32) NOT NULL,
+  password varchar(32) NOT NULL,
+  gender tinyint(4) NOT NULL default '0',
+  phone varchar(16) default NULL,
+  qq varchar(16) default NULL,
+  cash int(11) NOT NULL,
+  savecash int(11) default NULL,
+  checkin datetime default '0000-00-00 00:00:00',
+  message varchar(500) default NULL,
+  token varchar(32) default NULL,
+  status tinyint(4) NOT NULL default '1',
+  PRIMARY KEY  (id)
+) 
+

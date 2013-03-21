@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<!-- 管理大组中的小组 -->
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+	<script type="text/javascript">
+	function selectAll(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		for (i = 0; i < checkboxs.length; i++){
+			checkboxs[i].checked = true;
+		}
+	}
+	function notselectAll(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		for (i = 0; i < checkboxs.length; i++){
+			checkboxs[i].checked = false;
+		}
+	}
+	function checkSelect(elementName){
+		var checkboxs=document.getElementsByName(elementName);
+		var count=0;
+		for (i = 0; i < checkboxs.length; i++){
+			if(checkboxs[i].checked){
+				count++;
+			}
+		}
+		return count;
+	}
+
+	function addGroupMerchants(){
+		var count=checkSelect("other_merchant_ids[]");
+		if(count>0){
+			document.unselected_merchant_form.action="__URL__/addGroupMerchants";
+		}else{
+			window.alert("请先选择要添加的商家!!!");
+		}
+	}
+	function deleteGroupMerchants(){
+		var count=checkSelect("group_merchant_ids[]");
+		if(count>0){
+			document.selected_merchant_form.action="__URL__/deleteGroupMerchants";
+		}else{
+			window.alert("请先选择要移除的商家!!!");
+		}
+	}
+	</script>
+</head>
+<body>
+	<include file="merchant_head" />
+	<span>
+		小组管理> <u>{$groupname}</u>
+	</span>
+	<form name="selected_merchant_form" method="post">
+		<h3>已选小组</h3>
+		<empty  name="selectedMerchants">
+			<h3>暂时没有添加商家！</h3>
+			<else/>
+			<table cellspacing="0" style="width:400px;" border="1px">
+				<thead style="background:#9BCD9B;">
+					<tr>
+						<th align="center">选择</th>
+						<th align="center">商家名称</th>
+						<th align="center">主营</th>
+						<th align="center">顶</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="selectedMerchants" id="vo">
+						<tr>
+							<td align="center">
+								<input type="checkbox" value="{$vo['id']}"  name="group_merchant_ids[]"/>
+							</td>
+							<td align="center">
+								<lable>{$vo['name']}</lable>
+								<if condition="($vo['isrecommend'] eq 1)">
+									<img src="__PUBLIC__/admin/images/recommend.gif" title="推荐商家"/>
+									<else/>
+								</if>
+							</td>
+							<td align="center">{$vo['major']}</td>
+							<td align="center">{$vo['up']}</td>
+						</tr>
+					</volist>
+				</tbody>
+			</table>
+			<span>
+				<input type="button" id="selectBtn" value="全选"  onclick="selectAll('group_merchant_ids[]')"/>
+				<input type="button" value="取消"  onclick="notselectAll('group_merchant_ids[]')"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="hidden" value="{$groupid}" name="groupid"/>
+				<input type="submit" value="移除" onclick="deleteGroupMerchants()"/>
+			</span>
+		</empty >
+	</form>
+	<form name="unselected_merchant_form"  method="post">
+		<h3>未选小组</h3>
+		<empty  name="unselectedMerchants">
+			<center>
+				<h3>暂时没有其他商家！</h3>
+			</center>
+			<else/>
+			<table cellspacing="0"  style="width:400px;" border="1px">
+				<thead style="background:#DAA520;">
+					<tr>
+						<th align="center">选择</th>
+						<th align="center">商家名称</th>
+						<th align="center">主营</th>
+						<th align="center">顶</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="unselectedMerchants" id="vo">
+						<tr>
+							<td align="center">
+								<input type="checkbox" value="{$vo['id']}" name="other_merchant_ids[]"/>
+							</td>
+							<td align="center">{$vo['name']}</td>
+							<td align="center">{$vo['major']}</td>
+							<td align="center">{$vo['up']}</td>
+						</tr>
+					</volist>
+				</tbody>
+			</table>
+			<span>
+				<input type="button" id="selectBtn" value="全选"  onclick="selectAll('other_merchant_ids[]')"/>
+				<input type="button" value="取消"  onclick="notselectAll('other_merchant_ids[]')"/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="hidden" value="{$groupid}" name="groupid"/>
+				<input type="submit" value="添加" onclick="addGroupMerchants()"/>
+			</span>
+		</empty >
+	</form>
+</body>
+</html>

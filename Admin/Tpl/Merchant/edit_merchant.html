@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+</head>
+<body>
+	<include file="merchant_head" />
+	<form method="post" action="{:U('updateMerchant')}">
+		<table>
+			<tr>
+				<td>
+					<label for="name">名称</label>
+				</td>
+				<td>
+					<input type="text" name="name" required value="{$merchant.name}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<label for="major">主营:</label>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea name="major" cols="30" rows="4" style="max-width: 300px;max-height:160px;" required>{$merchant.major}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<label for="introduction">商家简介:</label>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea name="introduction" cols="30" rows="4" style="max-width: 300px;max-height:160px;" required >{$merchant.introduction}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<label for="news">最新动态:</label>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<textarea name="news" cols="30" rows="4" style="max-width: 300px;max-height:160px;" >{$merchant.news}</textarea>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="address">地址：</label>
+				</td>
+				<td>
+					<input type="text" name="address" required value="{$merchant.address}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="phone">电话：</label>
+				</td>
+				<td>
+					<input type="text" name="phone" required value="{$merchant.phone}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<label for="website">网址：</label>
+				</td>
+				<td>
+					<input type="text" name="website" required value="{$merchant.website}"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+				<if condition="$merchant.isrecommend eq 1">
+					<input type="checkbox" name="isrecommend" checked />
+					<else/>
+					<input type="checkbox" name="isrecommend"/>
+				</if>
+				<label for="isrecommend">推荐</label>
+			</td>
+			<td>
+				<if condition="$merchant.status eq 1">
+					<input type="checkbox" name="status" checked />
+					<else/>
+					<input type="checkbox" name="status" />
+				</if>
+				<label for="status">用户可见</label>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<input type="hidden" name="id" value="{$merchant.id}"/>
+				<input type="submit" value="保 存" name="dosubmit">
+				<input type="button" onClick="history.back()" value="取 消" />
+			</td>
+		</tr>
+	</table>
+</form>
+</body>
+</html>
