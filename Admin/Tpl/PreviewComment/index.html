@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>豆方便管理系统</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="xmu.SwordBearer">
+	<style type="text/css">
+	body{
+		font-family: "微软雅黑","宋体";
+	}
+	</style>
+	<script language="Javascript">
+	function delete_previewcomment(previewcomment_id)
+	{
+		if(confirm("确定删除该记录吗?")){
+		  return document.douuser_form.action="__URL__/delete_previewcomment/id/"+previewcomment_id;
+		}else{
+			return false;
+		}
+	}
+	function edit_previewcomment(previewcomment_id)
+	{
+		return document.douuser_form.action="__URL__/edit_previewcomment/id/"+previewcomment_id;
+	}
+</script>
+</head>
+<body>
+	<include file="previewcomment_head" />
+	<form action="{:U('index')}" method="post">
+		<span>
+			<select name="search_field">
+				<option value="id">ID</option>
+				<option value="content">内容</option>
+				<option value="time">时间</option>
+				<option value="uid">用户ID</option>
+			</select>
+		</span>
+		<span>
+			<label for="search_keyword">关键字</label>
+			<input type="text" name="search_keyword"/>
+		</span>
+		<input type="submit" value="搜索"  name="dosearch"/>
+	</form>
+	<form name="douuser_form">
+		<empty  name="allPreviewComments">
+			<h3>暂时没有用户！</h3>
+			<else/>
+			<table cellspacing="0" style="font-size: 16px;width:800px;">
+				<thead style="background:#C0C0C0;">
+					<tr>
+						<th width="50" align="center">ID</th>
+						<th align="center">内容</th>
+						<th align="center">时间</th>
+						<th align="center">用户ID</th>
+						<th align="center">管理</th>
+					</tr>
+				</thead>
+				<tbody>
+					<volist name="allPreviewComments" id="vo">
+						<tr  class="tr_merchant_info">
+							<td align="center">{$vo.id}</td>
+							<td align="center">{$vo.content}</td>
+							<td align="center">{$vo.time}</td>
+							<td align="center">{$vo.uid}</td>
+							<td align="center">
+								<input  type="submit" value="编辑"  onclick="edit_previewcomment({$vo.id})" />
+								<input  type="submit" value="删除" onClick="delete_previewcomment({$vo.id})"/>
+							</td>
+						</tr>
+					</volist>
+					<tr>
+		              <td height="40" colspan="6" align="center" valign="middle">{$page}</td>
+		            </tr>
+				</tbody>
+			</table>
+		</empty>
+	</form>
+</body>
+</html>

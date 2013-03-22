@@ -395,12 +395,18 @@ class DouUserAction extends Action {
 			if ($search_field=='id') {
 				$sql=" SELECT * FROM dfb_dou_user WHERE id=".$search_keyword;
 			}else{
-				$sql=" SELECT * FROM dfb_dou_user WHERE '".$serach_filed."' LIKE '%".$search_keyword."%'";
+				$sql=" SELECT * FROM dfb_dou_user WHERE ".$search_field." LIKE '%".$search_keyword."%'";
 			}
 			$allDouUsers=$DouUser->query($sql);
 		}else{
-			$DouUser=D('DouUser');
 			$allDouUsers=$DouUser->select();
+
+			import("ORG.Util.Page");//导入分页类
+	        $count=$DouUser->count();//得到总数
+	        $p=new Page($count,15);//每页5条数据
+	        $allDouUsers=$DouUser->limit($p->firstRow.','.$p->listRows)->select();   
+	        $page=$p->show();
+        	$this->assign('page',$page);
 		}
 		$this->assign('allDouUsers',$allDouUsers);
 	}
