@@ -2,12 +2,22 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	<style type="text/css">
 	body{
 		font-family: "微软雅黑","宋体";
 	}
 	</style>
 </head>
+<script type="text/javascript">
+	function changearea(){
+		var areacode=document.all.area.value;
+		$.get("__GROUP__/Public/changearea/areacode/"+areacode,"",function(result){
+			document.all.area.value=areacode;
+		  	parent.location.replace(parent.location.href);
+		});
+	}
+</script>
 <body>
 	<div style="float:left;">
 		<h1>豆方便管理系统</h1>
@@ -15,8 +25,25 @@
 	<div style="float:right;">
 		<span>
 			<span>你好,{$_SESSION[C('loginUserName')]}</span>
-			<a href="__GROUP__/Public/logout" target="_top">注销</a>
 			<a href="__GROUP__/Index/index" target="_parent">首页</a>
+			<a href="__GROUP__/Public/logout" target="_top">注销</a>
 		</span>
+		<br/>
+		<script type="text/javascript">
+		</script>
+		<select id="area" name="area" style="width:120px;float:right;" onchange="changearea();">
+			<if condition="$_SESSION['areacode'] eq 0">
+				<option value="0" selected>所有地区</option>
+					<else/>
+				<option value="0" >所有地区</option>
+			</if>
+			<volist name="areas" id="vo">
+				<if condition="$_SESSION['areacode'] eq $vo['areacode']">
+					<option value="{$vo.areacode}" selected>{$vo.name}</option>
+					<else/>
+				<option value="{$vo.areacode}" >{$vo.name}</option>
+				</if>
+			</volist>
+		</select>
 	</div>
 </body>

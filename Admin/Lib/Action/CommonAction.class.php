@@ -4,7 +4,11 @@ class CommonAction extends Action {
 	 public function index(){
 	 	$this->checkUser();
 	 	$Common=D('Common');
-	 	$commons=$Common->select();
+	 	if (isset($_SESSION['areacode']) && $_SESSION['areacode']!='0') {
+	 		$commons=$Common->where("areacode='".$_SESSION['areacode']."'")->select();
+	 	}else{
+	 		$commons=$Common->select();	
+	 	}
 	 	$this->assign('allCommons',$commons);
         $this->display();
 	 }
@@ -64,6 +68,7 @@ class CommonAction extends Action {
 	public function save_common(){
 		$this->checkUser();
 		$Common=D('Common');
+		$data['name']=$_REQUEST['name'];
 		$data['url']=$_REQUEST['url'];
 		$data['up']=$_REQUEST['up'];
 		$data['areacode']=$_REQUEST['areacode'];
@@ -101,6 +106,7 @@ class CommonAction extends Action {
 		$this->checkUser();
 		$id=$_REQUEST['id'];
 		$Common=D('Common');
+		$data['name']=$_REQUEST['name'];
 		$data['url']=$_REQUEST['url'];
 		$data['up']=$_REQUEST['up'];
 		$data['areacode']=$_REQUEST['areacode'];
@@ -108,7 +114,7 @@ class CommonAction extends Action {
 		if ($isExist!=null) {
 			$this->error("地区编码已存在");
 		}
-		$res=$Common->where($id)->save($data);
+		$res=$Common->where('id='.$id)->save($data);
 		if ($res!==false) {
 			$this->redirect(__GROUP__."/Common/index");
 		}else{

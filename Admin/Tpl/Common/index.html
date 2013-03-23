@@ -35,6 +35,7 @@
 				<thead style="background:#C0C0C0;">
 					<tr>
 						<th width="50" align="center">ID</th>
+						<th align="center">地区名称</th>
 						<th align="center">资讯网址</th>
 						<th align="center">支持数</th>
 						<th align="center">地区编号</th>
@@ -45,6 +46,7 @@
 					<volist name="allCommons" id="vo">
 						<tr  class="tr_merchant_info">
 							<td align="center">{$vo.id}</td>
+							<td align="center">{$vo.name}</td>
 							<td align="center"><a href="{$vo.url}" target="blank">{$vo.url}</a></td>
 							<td align="center">{$vo.up}</td>
 							<td align="center">{$vo.areacode}</td>

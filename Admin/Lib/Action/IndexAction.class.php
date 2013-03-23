@@ -3,7 +3,7 @@ class IndexAction extends Action {
     // 框架首页
 	 public function index(){
 	 	$this->checkUser();
-         $this->display();
+        $this->display();
 	 }
 
 	protected function checkUser(){

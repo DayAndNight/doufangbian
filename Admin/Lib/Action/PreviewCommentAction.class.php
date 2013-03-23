@@ -14,13 +14,15 @@ Class PreviewCommentAction extends Action {
 	/******************用户*********************/
 	/*
 		用户获留言
+		@param areacode 地区编码
 		@param lastid 最后一条留言的ID
 		@return res n条previewcomment
 	*/
 	public function getOldPreviewComment(){
 		$lastid=$_REQUEST['lastid'];
+		$areacode=$_REQUEST['areacode'];
 		$PreviewComment=new PreviewComment();
-		$previewcomments=$PreviewComment->limit($lastid,20)->relation(true)->select();
+		$previewcomments=$PreviewComment->where("areacode='".$areacode."'")->limit($lastid,20)->relation(true)->select();
 		if ($res==null) {
 			$this->ajaxReturn("数据错误","获取失败",0);
 		}else{
@@ -30,13 +32,14 @@ Class PreviewCommentAction extends Action {
 
 	/*
 		用户获取最新留言
+		@param areacode 地区编码
 		@param firstid 最近一条留言ID
 		@return res n条previewcomment
 	*/
 	public function getLatestPreviewComment(){
 		$lastid=$_REQUEST['lastid'];
 		$PreviewComment=new PreviewComment();
-		$previewcomments=$PreviewComment->where('id>'.$firstid)->relation(true)->select();
+		$previewcomments=$PreviewComment->where('id>'.$firstid." and areacode='".$areacode."'")->relation(true)->select();
 		if ($res==null) {
 			$this->ajaxReturn("数据错误","获取失败",0);
 		}else{
@@ -50,6 +53,7 @@ Class PreviewCommentAction extends Action {
 		@param token 验证token
 		@param firstid 最近一条记录的id
 		@param content 留言内容
+		@param areacode 地区编码
 		@return res common实体
 	*/
 	public function commit(){
@@ -60,13 +64,14 @@ Class PreviewCommentAction extends Action {
 			$PreviewComment=D('PreviewComment');
 			$data['content']=$_REQUEST['content'];
 			$data['time']=date("Y-m-d H:i:s");
+			$data['areacode']=$_REQUEST['areacode'];
 			$data['uid']=$id;
 			$res=$PreviewComment->add($data);
 			if ($res==false) {
 				$this->ajaxReturn("数据错误","留言失败",0);
 			}else{
 				$firstid=$_REQUEST['firstid'];
-				$previewcomments=$PreviewComment->where('id>'.$firstid)->relation(true)->select();
+				$previewcomments=$PreviewComment->where('id>'.$firstid." and areacode='".$_REQUEST['areacode']."'")->relation(true)->select();
 				$this->ajaxReturn($previewcomments,"留言成功",1);
 			}
 		}else{
@@ -165,9 +170,15 @@ Class PreviewCommentAction extends Action {
 		if ($res==null) {
 			$this->error("用户不存在");
 		}
+		$areacode=$_REQUEST['areacode'];
+		$Common =new CommonModel();
+		if ($Common->isExistAreacode($areacode)==false) {
+			$this->error("地区编码不存在");
+		}
 		$PreviewComment=new PreviewCommentModel();
 		$data['content']=$_REQUEST['content'];
 		$data['time']=$_REQUEST['time'];
+		$data['areacode']=$areacode;
 		$data['uid']=$_REQUEST['uid'];
 		$res=$PreviewComment->add($data);
 		if ($res==false) {
@@ -203,12 +214,18 @@ Class PreviewCommentAction extends Action {
 		if ($res==null) {
 			$this->error("用户不存在");
 		}
+		$areacode=$_REQUEST['areacode'];
+		$Common=new CommonModel();
+		if ($Common->isExistAreacode($areacode)==false) {
+			$this->error("地区编码不存在");
+		}
 		$id=$_REQUEST['id'];
 		$PreviewComment=new PreviewCommentModel();
 		$data['content']=$_REQUEST['content'];
 		$data['time']=$_REQUEST['time'];
+		$data['areacode']=$areacode;
 		$data['uid']=$_REQUEST['uid'];
-		$res=$Common->where($id)->save($data);
+		$res=$PreviewComment->where('id='.$id)->save($data);
 		if ($res!==false) {
 			$this->redirect(__GROUP__."/PreviewComment/index");
 		}else{
@@ -242,16 +259,28 @@ Class PreviewCommentAction extends Action {
 			$search_field=$_POST['search_field'];
 			$search_keyword=trim($_POST['search_keyword']);
 			if ($search_field=='id' || $search_field=='uid') {
-				$sql=" SELECT * FROM dfb_preview_comment WHERE ".$search_field."=".$search_keyword;
+				if ($_SESSION['areacode']!='0') {
+					$sql=$PreviewComment->where("areacode='".$_SESSION['areacode']."' and ".$search_field."=".$search_keyword)->select();
+				}else{
+					$sql=$PreviewComment->where($search_field."=".$search_keyword)->select();
+				}
 			}else{
-				$sql=" SELECT * FROM dfb_preview_comment WHERE ".$search_field." LIKE '%".$search_keyword."%'";
+				if ($_SESSION['areacode']!='0') {
+					$sql=$PreviewComment->where("areacode='".$_SESSION['areacode']."' and ".$search_field." LIKE '%".$search_keyword."%'")->select();
+				}else{
+					$sql=$PreviewComment->where($search_field." LIKE '%".$search_keyword."%'")->select();
+				}
 			}
 			$allPreviewComments=$PreviewComment->query($sql);
 		}else{
 			import("ORG.Util.Page");//导入分页类
 	        $count=$PreviewComment->count();//得到总数
 	        $p=new Page($count,15);//每页5条数据
-	        $allPreviewComments=$PreviewComment->limit($p->firstRow.','.$p->listRows)->select();
+	        if ($_SESSION['areacode']!='0') {
+				$allPreviewComments=$PreviewComment->where("areacode='".$_SESSION['areacode']."'")->limit($p->firstRow.','.$p->listRows)->select();
+	        }else{
+				$allPreviewComments=$PreviewComment->limit($p->firstRow.','.$p->listRows)->select();
+	        }
 	        $page=$p->show();
         	$this->assign('page',$page);
 		}
@@ -314,7 +343,7 @@ Class PreviewCommentAction extends Action {
 		$data['content']=$_REQUEST['content'];
 		$data['time']=$_REQUEST['time'];
 		$data['uid']=$_REQUEST['uid'];
-		$res=$PreviewCommentReply->where($id)->save($data);
+		$res=$PreviewCommentReply->where('id='.$id)->save($data);
 		if ($res!==false) {
 			$res=$PreviewCommentReply->find($id);
 			$this->edit_previewcomment($res['cid']);

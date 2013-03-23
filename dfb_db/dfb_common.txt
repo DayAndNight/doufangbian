@@ -1,0 +1,9 @@
+CREATE TABLE dfb_common (
+  id int(11) NOT NULL auto_increment,
+  name varchar(32) NOT NULL,
+  url varchar(200) NOT NULL,
+  up int(32) NOT NULL default '0',
+  areacode varchar(16) NOT NULL,
+  PRIMARY KEY  (id)
+)
+
